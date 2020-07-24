@@ -54,19 +54,19 @@ if mail.read_csv('filename.csv'):
    - ## By default everything will be read
 
 ## 2) Rendering the Certificates
- - **Pre Processes ** 
-   - **Make sure Your certificate template is present in the root directory of the program / or mention a complete path to it, and The Csv file also has the name field and you have read it from the csv file using read_csv**
-   - ## The Type of the certificate template should be a '.png' format for better results
- - ## Usage
-   ```
-   if mail.read_csv('filename.csv'):
-    mail.renderCertificate('certificateTemplate.png')
-   ```
-   **Now if you are Probably working with VS-code it would be more efficient**
-   - open the folder name that will created on the root directory of the project only One image will be rendered for sample purpose
-   - As the Terminal will promt you for the position of the text in the certificate Template
-   - Make sure You experiment with your values and the the font-size,
-   - Once satisfied press (1) when prompted to create the certificates for all the names in the CSV file
+  - ## Pre Processes
+       - **Make sure Your certificate template is present in the root directory of the program / or mention a complete path to it, and The Csv file also has the name field and you have read it from the csv file using read_csv**
+       - ## The Type of the certificate template should be a '.png' format for better results
+     - ## Usage
+       ```
+       if mail.read_csv('filename.csv'):
+        mail.renderCertificate('certificateTemplate.png')
+       ```
+       **Now if you are Probably working with VS-code it would be more efficient**
+       - open the folder name that will created on the root directory of the project only One image will be rendered for sample purpose
+       - As the Terminal will promt you for the position of the text in the certificate Template
+       - Make sure You experiment with your values and the the font-size,
+       - Once satisfied press (1) when prompted to create the certificates for all the names in the CSV file
 ## 3) Now if you have a email section in your csv file and wish to send mails, make sure you comeplete the Initial Steps
 - Right after that Call the send_mail() method in the mail object
 - ```
