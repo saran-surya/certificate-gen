@@ -198,7 +198,7 @@ class Certificates:
                 return True
         except UnicodeDecodeError:
             print(
-                '\nplease try passing this parameter to the read_csv\n\n self.read_csv(filename, \'latin-1\')')
+                '\nplease try passing this parameter to the read_csv\n\n self.read_csv(filename, encoding_f=\'latin-1\')\n\n If that doesnt work , please choose encoders from the csv docs of pypi and pass them in...')
             return False
         except:
             print(
