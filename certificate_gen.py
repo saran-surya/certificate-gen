@@ -32,12 +32,17 @@ class Certificates:
         self.sample = False
         self.satisfied = 0
 
-        self.msg = MIMEMultipart()
         self.counts = 0
         self.counts_1 = 0
         self.server = ''
+        self.port = 587
 
         self.font_path = 'C:/Windows/Fonts/Arial/ariblk.ttf'
+
+        self.attachment = ''
+        self.part = ''
+        self.text = ''
+        self.msg = ''
 
     def _draw(self, certificate_file, name):
         try:
@@ -76,19 +81,19 @@ class Certificates:
     def _send_mails(self, username, password, subject, body):
         if self.emails == []:
             print('\nNo mail Ids are provided to send the mails')
-            return False
+            return
         else:
-            port = 587
+          
             totals = len(self.emails)
             try:
-                self.server = smtplib.SMTP('smtp.gmail.com', port)
+                self.server = smtplib.SMTP('smtp.gmail.com', self.port)
                 self.server.starttls()
                 self.server.login(username, password)
                 addImages = (int(input(
                     '\nDo you want to attach Certificates to the mails (1 for yes | 0 for no) : ')))
 
                 for i in range(len(self.emails)):
-
+                    self.msg = MIMEMultipart()
                     self.msg['From'] = username
                     self.msg['To'] = self.emails[i]
                     self.msg['Subject'] = subject
@@ -98,30 +103,26 @@ class Certificates:
                     if(addImages == 1):
                         filename = os.path.join(
                             self.path, self.names[i]+'.png')
-                        attachment = open(filename, 'rb')
-                        part = MIMEBase('application', 'octet-stream')
-                        part.set_payload((attachment).read())
-                        encoders.encode_base64(part)
-                        part.add_header('Content-Disposition',
-                                        "attachment; filename= "+filename)
+                        self.attachment = open(filename, 'rb')
+                        self.part = MIMEBase('application', 'octet-stream')
+                        self.part.set_payload((self.attachment).read())
+                        encoders.encode_base64(self.part)
+                        self.part.add_header('Content-Disposition',
+                                        "self.attachment; filename= "+filename)
 
-                        self.msg.attach(part)
+                        self.msg.attach(self.part)
 
-                    text = self.msg.as_string()
-                    self.server.sendmail(username, self.emails[i], text)
+                    self.text = self.msg.as_string()
+                    self.server.sendmail(username, self.emails[i], self.text)
 
                     self.counts_1 += 1
                     print(
                         f'{self.counts_1} / {totals} --------- {self.emails[i]}')
-
-                return True
+                        
+                self.server.quit()
+            
             except smtplib.SMTPAuthenticationError:
                 print('Please Check your username and Password, \n\n And make sure you have turned on the allow less secure apps for your account')
-                return False
-            except:
-                return False
-            finally:
-                self.server.quit()
 
     def renderCertificate(self, certificate_file):
         if len(self.names) > 0 and ('.png' in certificate_file or '.jpeg' in certificate_file):
@@ -215,8 +216,8 @@ class Mailer(Certificates):
 
     def send_mail(self):
         if(self.username and self.password and self.subject and self.body):
-            if self._send_mails(self.username, self.password, self.subject, self.body):
-                print('\nCompleted Sending all Mails !!')
-                return
+            self._send_mails(self.username, self.password, self.subject, self.body)
+            print('\nCompleted Sending all Mails !!')
+            return
         print('\nSome Error has occured')
         return
