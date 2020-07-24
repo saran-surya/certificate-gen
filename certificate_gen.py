@@ -35,6 +35,7 @@ class Certificates:
         self.msg = MIMEMultipart()
         self.counts = 0
         self.counts_1 = 0
+        self.server = ''
 
         self.font_path = 'C:/Windows/Fonts/Arial/ariblk.ttf'
 
@@ -80,9 +81,9 @@ class Certificates:
             port = 587
             totals = len(self.emails)
             try:
-                server = smtplib.SMTP('smtp.gmail.com', port)
-                server.starttls()
-                server.login(username, password)
+                self.server = smtplib.SMTP('smtp.gmail.com', port)
+                self.server.starttls()
+                self.server.login(username, password)
                 addImages = (int(input(
                     '\nDo you want to attach Certificates to the mails (1 for yes | 0 for no) : ')))
 
@@ -107,7 +108,7 @@ class Certificates:
                         self.msg.attach(part)
 
                     text = self.msg.as_string()
-                    server.sendmail(username, self.emails[i], text)
+                    self.server.sendmail(username, self.emails[i], text)
 
                     self.counts_1 += 1
                     print(
@@ -120,7 +121,7 @@ class Certificates:
             except:
                 return False
             finally:
-                server.quit()
+                self.server.quit()
 
     def renderCertificate(self, certificate_file):
         if len(self.names) > 0 and ('.png' in certificate_file or '.jpeg' in certificate_file):
