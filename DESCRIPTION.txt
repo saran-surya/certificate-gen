@@ -1,0 +1,63 @@
+This is a Python package that supports only on windows,
+We are working hard to make them available in Mac and Linux, too,
+
+The Main aim of this package is to help users create bulk "E-CERTIFICATES" and distribute them through mails,
+We have had this module under testing for 3000+ mails and we have had it stable, 
+
+People using this must be aware of using a G-Suite account as they have (gmail limits set to maximum amounts,)
+
+!!! Please donot use this module for spamming, they are purely meant to distribute E-Certificates or Create them,
+!!! Make sure you only provide CSV files !!!
+
+Installation : pip install cgm
+
+Usage : for (only generating bulk certificates)
+
+    from cgm import Certificates
+
+    certificate = Certificates()
+    if certificate.read_csv('Your csv filename if present in project root directory || full path to your csv file'):
+        a.renderCertificate('Your csv filename if present in project root directory || full path to your csv file')
+
+    this will promt you a small command line interface to move your text to the top / bottom / left / right
+    and also choose your text size, (to continue with defaults press enter!!)
+
+    and if you are satisfied with your cetificates then you can press 1 when prompted, then all your certificates will be ready in a folder 
+    name Certificates and then if you wish to proceed, you can pass in the send_mail method of the Mailer() class
+
+sending Mails:
+    on sending Mails:
+        you will be prompted to attach images / certificates,
+        Please press (1) if you want to..
+
+        and make sure you fill out all the fields of the Mailer object
+
+        example:
+            
+            from cgm import Mailer
+
+            mail = Mailer()
+            mail.username = '' #your username
+            mail.password = '' #your password
+
+            ((( This process might seem of a security issue but , it isn't, the program hosts a local server in your machine and then distributes the mails and quits out from it automatically, so you don't need to worry about the security)))
+
+            And make sure you don't add them to your github pages with the username and password
+
+    Changing Font Styles : 
+        we use the default font as Arial Black,
+        if you wish to change the font format, please specify the font-path in the object of the Mailer / Certificate 's objects
+
+        example:
+            obj.font_path = '' # the complete path to the font
+
+
+    Errors:
+        one main Error would be the encoding formats,
+            we use default encoding format as 'utf-8' in case of promted to use another encoder, please pass them as an argument to the Mailer / Certificate 's read_csv() method
+            
+            obj.read_csv('filename', encoding_f = 'thedesired format')
+                for defaults:
+                    obj.read_csv('filename') will do.
+        
+        We have made our best to handle errors, and working on them to make them more user friendly,
