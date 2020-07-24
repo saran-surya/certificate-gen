@@ -40,7 +40,6 @@ class Certificates:
 
     def _draw(self, certificate_file, name):
         try:
-            self.font_path = 'C:/Windows/Fonts/Arial/ariblk.ttf'
             completePath = os.path.join(self.path, name)
             img = Image.open(certificate_file, mode='r')
             image_width = img.width
@@ -114,7 +113,7 @@ class Certificates:
                     print(
                         f'{self.counts_1} / {totals} --------- {self.emails[i]}')
 
-                    return True
+                return True
             except smtplib.SMTPAuthenticationError:
                 print('Please Check your username and Password, \n\n And make sure you have turned on the allow less secure apps for your account')
                 return False
@@ -161,7 +160,6 @@ class Certificates:
 
             for name in self.names:
                 self._draw(certificate_file, name)
-        print('Please check your certificate filename!!')
         return
 
     def read_csv(self, filename, getEmails=True, getNames=True, encoding_f='utf-8'):
