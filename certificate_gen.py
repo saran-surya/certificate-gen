@@ -221,3 +221,4 @@ class Mailer(Certificates):
             return
         print('\nSome Error has occured')
         return
+
