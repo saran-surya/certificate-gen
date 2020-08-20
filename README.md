@@ -16,7 +16,6 @@ This Package mainly focusses on creating bulk Certificates and mailing them to t
 
 # Usage
 ## Initial steps for sending Mails
-- This module is created with oops thus making it possible to run multiple tasks
 ```
 from certificate_gen import Mailer
 
@@ -79,4 +78,29 @@ if mail.read_csv('filename.csv'):
    - And also follow the PreProcesses
    - **You will have a Mailing limit, and if the process quit with limit exceeded error, please wait for 24 hours and re run the program, ( and make sure you have deleted the previous entries, you will be prompted about the entries sent in the terminal you can refer there)**
 
-  
+## 4) Sending out single Mails:
+   ```
+  from certificate_gen import Mailer
+  mail = Mailer()
+  mail.username = '' # Username
+  mail.password = '' # Password
+  mail.subject = '' # subject
+  mail.body = '''Body of the Mail'''
+
+  mail.attachment_path = 'sample_pic.png' # You can add attachments if you want to
+
+  mail.emails.append('') # For sending simple mails, just append the elements or simply target the object to a list of Email ids,
+  mail.send_mail_with_attachment() #If you have added attachments Please use this,
+  mail.send_mail() #Else this can be used to send single Mails
+   ``` 
+## 4.1) Sending multiple Mails:
+   ```
+  from certificate_gen import Mailer
+  mail = Mailer()
+  mail.username = '' # Username
+  mail.password = '' # Password
+  mail.subject = '' # subject
+  mail.body = '''Body of the Mail'''
+  if mail.read_csv('csv file path'):
+    mail.send_mail
+   ```
