@@ -214,7 +214,7 @@ class Mailer(Certificates):
         self.body = ''
         Certificates.__init__(self)
 
-    def send_mail(self):
+    def send_certificate_mail(self):
         if(self.username and self.password and self.subject and self.body):
             self._send_mails(self.username, self.password, self.subject, self.body)
             print('\nCompleted Sending all Mails !!')
