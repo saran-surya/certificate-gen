@@ -1,7 +1,7 @@
 # CERTIFICATE-GENERATOR / MAILER 
 This Package mainly focusses on creating bulk Certificates and mailing them to the corresponding respondents
 
-
+## We now Support both Excel and Csv files
 
 # Installation
 - ## pip install certificate-gen
@@ -45,11 +45,11 @@ if mail.read_file('filename.csv'):
  ```mail.read_file('filename.csv', encoding_f = 'latin-1')``` 
   - ## You can also try to pass any encoding formats available for csv_reader available online for PYTHON
   ## 1.1) You can also read only the mails and names by passing an optional argument to the read_file method
-   - **This will only red the Emails in the CSV file**
+   - **This will only read the Emails in the file**
      ```
      if mail.read_file('filename.csv', getNames=False ,encoding_f='latin-1'):
      ```
-   - **This will only read the Names in the CSV file**
+   - **This will only read the Names in the file**
      ```
      if mail.read_file('filename.csv', getEmails=False ,encoding_f='latin-1'):
      ```
