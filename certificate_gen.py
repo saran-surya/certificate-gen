@@ -4,6 +4,7 @@ import email
 import os
 import csv
 import sys
+import xlrd
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -206,42 +207,79 @@ class Certificates:
                 self._draw(certificate_file, name)
         return
 
-    def read_csv(self, filename, getEmails=True, getNames=True, encoding_f='utf-8'):
+    def read_file(self, filename, getEmails=True, getNames=True, encoding_f='utf-8'):
         try:
-            with open(filename, encoding=encoding_f) as csv_file:
-                csv_reader = csv.reader(csv_file, delimiter=',')
+            workbook = xlrd.open_workbook(filename)
+            sheet = workbook.sheet_by_index(0)
 
-                for i in csv_reader:
-                    self.totals.append(i)
+            for i in range(sheet.nrows):
+                sam_lst = [str(sheet.cell_value(i,j)) for j in range(sheet.ncols)]
+                self.totals.append(sam_lst)
+            
+            for i in self.totals[0]:
+                x = ''.join(i.split())
+                x = x.lower()
+                if x == 'emailaddress' or x == 'email' or x == 'emailid':
+                    self.email_loaction = self.totals[0].index(i)
+                elif x == 'name' or x == 'fullname' or x == 'full-name':
+                    self.name_location = self.totals[0].index(i)
 
-                for i in self.totals[0]:
-                    x = ''.join(i.split())
-                    x = x.lower()
-                    if x == 'emailaddress' or x == 'email' or x == 'emailid':
-                        self.email_loaction = self.totals[0].index(i)
-                    elif x == 'name' or x == 'fullname' or x == 'full-name':
-                        self.name_location = self.totals[0].index(i)
-
-                self.totals.pop(0)
-                if getNames and getEmails:
-                    for i in self.totals:
-                        if i[self.name_location] != '':
-                            self.names.append(i[self.name_location])
-                            self.emails.append(i[self.email_loaction])
-                elif getEmails:
-                    for i in self.totals:
-                        self.emails.append(i[self.email_loaction])
-                else:
-                    for i in self.totals:
+            self.totals.pop(0)
+            if getNames and getEmails:
+                for i in self.totals:
+                    if i[self.name_location] != '':
                         self.names.append(i[self.name_location])
-                csv_file.close()
-                print('\n******************')
-                print('\nFile Read Successful')
-                return True
-        except UnicodeDecodeError:
-            print(
-                '\nplease try passing this parameter to the read_csv\n\n self.read_csv(filename, encoding_f=\'latin-1\')\n\n If that doesnt work , please choose encoders from the csv docs of pypi and pass them in...')
-            return False
+                        self.emails.append(i[self.email_loaction])
+            elif getEmails:
+                for i in self.totals:
+                    self.emails.append(i[self.email_loaction])
+            else:
+                for i in self.totals:
+                    self.names.append(i[self.name_location])
+            print('\n******************')
+            print('\nFile Read Successful')
+            return True
+
+        except xlrd.biffh.XLRDError:
+            try:
+                with open(filename, encoding=encoding_f) as csv_file:
+                    csv_reader = csv.reader(csv_file, delimiter=',')
+
+                    for i in csv_reader:
+                        self.totals.append(i)
+
+                    for i in self.totals[0]:
+                        x = ''.join(i.split())
+                        x = x.lower()
+                        if x == 'emailaddress' or x == 'email' or x == 'emailid':
+                            self.email_loaction = self.totals[0].index(i)
+                        elif x == 'name' or x == 'fullname' or x == 'full-name':
+                            self.name_location = self.totals[0].index(i)
+
+                    self.totals.pop(0)
+                    if getNames and getEmails:
+                        for i in self.totals:
+                            if i[self.name_location] != '':
+                                self.names.append(i[self.name_location])
+                                self.emails.append(i[self.email_loaction])
+                    elif getEmails:
+                        for i in self.totals:
+                            self.emails.append(i[self.email_loaction])
+                    else:
+                        for i in self.totals:
+                            self.names.append(i[self.name_location])
+                    csv_file.close()
+                    print('\n******************')
+                    print('\nFile Read Successful')
+                    return True
+            except UnicodeDecodeError:
+                print(
+                    '\nPlease try passing this parameter to the read_file\n\n self.read_file(filename, encoding_f=\'latin-1\')\n\n If that doesnt work , please choose encoders from the csv docs of pypi and pass them in...')
+                return False
+            except:
+                print(
+                    '\nPlease check your filename, make sure it is in the root folder of the program !!')
+                return False
         except:
             print(
                 '\nPlease check your filename, make sure it is in the root folder of the program !!')

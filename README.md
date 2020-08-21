@@ -1,6 +1,8 @@
 # CERTIFICATE-GENERATOR / MAILER 
 This Package mainly focusses on creating bulk Certificates and mailing them to the corresponding respondents
 
+
+
 # Installation
 - ## pip install certificate-gen
 - **This module also uses the library pillow, do not worry, it will be installed automatically**
@@ -30,35 +32,36 @@ mail.body = '' #body of the Mail
 
 ## 0) To generate certificates alone, please follow the steps from 1-2 and you don't need to change any account settings as mentioned in the pre process
 
-## 1) Reading the CSV file (Make sure you only pass csv files)
-- **Make sure the CSV file is present in the root directory of the program**
-- ###### Please pass the read_csv method in an if block so we can catch any posisble errors while reading the file
+
+## 1) Reading the file (Make sure you only pass csv files)
+- **This Function also accepts CSV and EXCEL Files, Feel Free to raise pull requests for issues :)**
+- ###### Please pass the read_file method in an if block so we can catch any posisble errors while reading the file
 ```
-if mail.read_csv('filename.csv'):
+if mail.read_file('filename.csv'):
     mail.renderCertificate('certificateTemplate.png')
 ```
-**Possible errors in the read_csv method**
- - **At times the encoding of the csv files might not match and you will be prompted for an error pass the encoding format in the read_csv method**
- ```mail.read_csv('filename.csv', encoding_f = 'latin-1')``` 
+**Possible errors in the read_file method**
+ - **At times the encoding of the csv files might not match and you will be prompted for an error pass the encoding format in the read_file method**
+ ```mail.read_file('filename.csv', encoding_f = 'latin-1')``` 
   - ## You can also try to pass any encoding formats available for csv_reader available online for PYTHON
-  ## 1.1) You can also read only the mails and names by passing an optional argument to the read_csv method
+  ## 1.1) You can also read only the mails and names by passing an optional argument to the read_file method
    - **This will only red the Emails in the CSV file**
      ```
-     if mail.read_csv('filename.csv', getNames=False ,encoding_f='latin-1'):
+     if mail.read_file('filename.csv', getNames=False ,encoding_f='latin-1'):
      ```
    - **This will only read the Names in the CSV file**
      ```
-     if mail.read_csv('filename.csv', getEmails=False ,encoding_f='latin-1'):
+     if mail.read_file('filename.csv', getEmails=False ,encoding_f='latin-1'):
      ```
    - ## By default everything will be read
 
 ## 2) Rendering the Certificates
  - **Pre Processes ** 
-   - **Make sure Your certificate template is present in the root directory of the program / or mention a complete path to it, and The Csv file also has the name field and you have read it from the csv file using read_csv**
+   - **Make sure Your certificate template is present in the root directory of the program / or mention a complete path to it, and The Csv file also has the name field and you have read it from the csv file using read_file**
    - ## The Type of the certificate template should be a '.png' format for better results
  - ## Usage
    ```
-   if mail.read_csv('filename.csv'):
+   if mail.read_file('filename.csv'):
     mail.renderCertificate('certificateTemplate.png')
    ```
    **Now if you are Probably working with VS-code it would be more efficient**
@@ -69,7 +72,7 @@ if mail.read_csv('filename.csv'):
 ## 3) Now if you have a email section in your csv file and wish to send mails, make sure you comeplete the Initial Steps
 - Right after that Call the send_certificate_mail() method in the mail object
 - ```
-  if mail.read_csv('filename.csv'):
+  if mail.read_file('filename.csv'):
     mail.renderCertificate('certificateTemplate.png')
     mail.send_certificate_mail()
   ```
@@ -101,6 +104,6 @@ if mail.read_csv('filename.csv'):
   mail.password = '' # Password
   mail.subject = '' # subject
   mail.body = '''Body of the Mail'''
-  if mail.read_csv('csv file path'):
+  if mail.read_file('csv file path'):
     mail.send_mail
    ```
