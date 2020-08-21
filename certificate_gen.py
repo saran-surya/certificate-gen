@@ -34,15 +34,17 @@ class Certificates:
 
         self.counts = 0
         self.counts_1 = 0
+        self.font_path = 'C:/Windows/Fonts/Arial/ariblk.ttf'
+        
         self.server = ''
         self.port = 587
-
-        self.font_path = 'C:/Windows/Fonts/Arial/ariblk.ttf'
 
         self.attachment = ''
         self.part = ''
         self.text = ''
         self.msg = ''
+
+        self.attachment_path = ''
 
     def _draw(self, certificate_file, name):
         try:
@@ -78,7 +80,7 @@ class Certificates:
         except FileExistsError:
             return
 
-    def _send_mails(self, username, password, subject, body):
+    def _send_certificate_mails(self, username, password, subject, body):
         if self.emails == []:
             print('\nNo mail Ids are provided to send the mails')
             return
@@ -111,6 +113,46 @@ class Certificates:
                                         "self.attachment; filename= "+filename)
 
                         self.msg.attach(self.part)
+
+                    self.text = self.msg.as_string()
+                    self.server.sendmail(username, self.emails[i], self.text)
+
+                    self.counts_1 += 1
+                    print(
+                        f'{self.counts_1} / {totals} --------- {self.emails[i]}')
+                        
+                self.server.quit()
+            
+            except smtplib.SMTPAuthenticationError:
+                print('Please Check your username and Password, \n\n And make sure you have turned on the allow less secure apps for your account')
+
+    def _send_attachment_mail(self, username, password, subject, body):
+        if self.emails == []:
+            print('\nNo mail Ids are provided to send the mails')
+            return
+        else:
+            totals = len(self.emails)
+            try:
+                self.server = smtplib.SMTP('smtp.gmail.com', self.port)
+                self.server.starttls()
+                self.server.login(username, password)
+                for i in range(len(self.emails)):
+                    self.msg = MIMEMultipart()
+                    self.msg['From'] = username
+                    self.msg['To'] = self.emails[i]
+                    self.msg['Subject'] = subject
+
+                    self.msg.attach(MIMEText(body, 'plain'))
+
+                    filename = self.attachment_path
+                    self.attachment = open(filename, 'rb')
+                    self.part = MIMEBase('application', 'octet-stream')
+                    self.part.set_payload((self.attachment).read())
+                    encoders.encode_base64(self.part)
+                    self.part.add_header('Content-Disposition',
+                                    "self.attachment; filename= "+filename)
+
+                    self.msg.attach(self.part)
 
                     self.text = self.msg.as_string()
                     self.server.sendmail(username, self.emails[i], self.text)
@@ -205,6 +247,46 @@ class Certificates:
                 '\nPlease check your filename, make sure it is in the root folder of the program !!')
             return False
 
+    def _send_mail(self, username, password, subject, body):
+        if self.emails == []:
+            print('\nNo mail Ids are provided to send the mails')
+            return
+        else:
+            totals = len(self.emails)
+            try:
+                self.server = smtplib.SMTP('smtp.gmail.com', self.port)
+                self.server.starttls()
+                self.server.login(username, password)
+                for i in range(len(self.emails)):
+                    self.msg = MIMEMultipart()
+                    self.msg['From'] = username
+                    self.msg['To'] = self.emails[i]
+                    self.msg['Subject'] = subject
+
+                    self.msg.attach(MIMEText(body, 'plain'))
+
+                    # filename = self.attachment_path
+                    # self.attachment = open(filename, 'rb')
+                    # self.part = MIMEBase('application', 'octet-stream')
+                    # self.part.set_payload((self.attachment).read())
+                    # encoders.encode_base64(self.part)
+                    # self.part.add_header('Content-Disposition',
+                    #                 "self.attachment; filename= "+filename)s
+
+                    # self.msg.attach(self.part)
+
+                    self.text = self.msg.as_string()
+                    self.server.sendmail(username, self.emails[i], self.text)
+
+                    self.counts_1 += 1
+                    print(
+                        f'{self.counts_1} / {totals} --------- {self.emails[i]}')
+                        
+                self.server.quit()
+            
+            except smtplib.SMTPAuthenticationError:
+                print('Please Check your username and Password, \n\n And make sure you have turned on the allow less secure apps for your account')
+
 
 class Mailer(Certificates):
     def __init__(self):
@@ -214,11 +296,25 @@ class Mailer(Certificates):
         self.body = ''
         Certificates.__init__(self)
 
-    def send_mail(self):
+    def send_certificate_mail(self):
         if(self.username and self.password and self.subject and self.body):
-            self._send_mails(self.username, self.password, self.subject, self.body)
+            self._send_certificate_mails(self.username, self.password, self.subject, self.body)
             print('\nCompleted Sending all Mails !!')
             return
         print('\nSome Error has occured')
         return
+    
+    def send_mail_with_attachment(self):
+        if self.attachment_path == '':
+            print('Please provide an attachment for this method')
+            self.attachment_path = str(input('Attachment Path : '))
+        self._send_attachment_mail(self.username, self.password, self.subject, self.body)
+        print('\nCompleted Sending All Mails !!')
+
+    def send_mail(self):
+        if(self.username and self.password and self.subject):
+            self._send_mail(self.username, self.password, self.subject, self.body)
+
+            print('\nCompleted sending Mails')
+
 
