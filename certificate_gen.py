@@ -317,3 +317,4 @@ class Mailer(Certificates):
 
             print('\nCompleted sending Mails')
 
+
